@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Management App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: white;
+    }
+    .container {
+      width: 80%;
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    .task-input, .task-title, .task-description, .task-status {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .task-status {
+      background-color: #f9f9f9;
+    }
+    .task-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .task-item button {
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .task-item button:hover {
+      background-color: black;
+    }
+    .edit-btn {
+      background-color: lime;
+    }
+    .edit-btn:hover {
+      background-color: lime;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Task Management App</h1>
+
+    <!-- Input fields for Title, Description, and Status -->
+    <input type="text" id="taskTitle" class="task-title" placeholder="Enter task title...">
+    <textarea id="taskDescription" class="task-description" placeholder="Enter task description..."></textarea>
+    <select id="taskStatus" class="task-status">
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+    <button id="addTaskBtn">Add Task</button>
+
+    <ul id="taskList" class="task-list"></ul>
+  </div>
+
+  <script>
+    const taskTitle = document.getElementById('taskTitle');
+    const taskDescription = document.getElementById('taskDescription');
+    const taskStatus = document.getElementById('taskStatus');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+
+    addTaskBtn.addEventListener('click', addTask);
+
+    function addTask() {
+      const title = taskTitle.value.trim();
+      const description = taskDescription.value.trim();
+      const status = taskStatus.value;
+
+      if (title === '' || description === '') {
+        alert('Please enter both title and description!');
+        return;
+      }
+
+      const taskItem = document.createElement('li');
+      taskItem.classList.add('task-item');
+
+      const taskContent = document.createElement('div');
+      taskContent.innerHTML = `
+        <h3>${title}</h3>
+        <p>${description}</p>
+        <p><strong>Status:</strong> <span class="status">${status}</span></p>
+      `;
+      taskItem.appendChild(taskContent);
+
+      // Edit button
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.classList.add('edit-btn');
+      editBtn.onclick = () => editTask(taskItem, title, description, status);
+      taskItem.appendChild(editBtn);
+
+      // Delete button
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => deleteTask(taskItem);
+      taskItem.appendChild(deleteBtn);
+
+      taskList.appendChild(taskItem);
+
+      // Clear inputs
+      taskTitle.value = '';
+      taskDescription.value = '';
+      taskStatus.value = 'Pending';
+    }
+
+    function editTask(taskItem, oldTitle, oldDescription, oldStatus) {
+      const newTitle = prompt('Edit title:', oldTitle);
+      const newDescription = prompt('Edit description:', oldDescription);
+      const newStatus = prompt('Edit status (Pending, In Progress, Completed):', oldStatus);
+
+      if (newTitle && newDescription && newStatus) {
+        taskItem.querySelector('h3').textContent = newTitle;
+        taskItem.querySelector('p').textContent = newDescription;
+        taskItem.querySelector('.status').textContent = newStatus;
+      }
+    }
+
+    function deleteTask(taskItem) {
+      taskItem.remove();
+    }
+  </script>
+
+</body>
+</html>
